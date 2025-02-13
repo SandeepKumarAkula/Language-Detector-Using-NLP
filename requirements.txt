@@ -1,0 +1,4 @@
+Flask
+Flask-CORS
+pickle5
+scikit-learn
