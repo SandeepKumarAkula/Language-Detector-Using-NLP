@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Detector</title>
+    <style>
+        :root {
+            --bg: #1e1e2e;
+            --fg: #ffffff;
+            --primary1: #4a90e2;
+            --primary2: #50e3c2;
+            --secondary: #ff4081;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.1em;
+            background: #2a2a3b;
+            color: var(--fg);
+            outline: none;
+        }
+        button {
+            background: linear-gradient(135deg, var(--primary1), var(--primary2));
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: 0.3s ease-in-out;
+        }
+        button:hover {
+            background: var(--secondary);
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌍A.S.K Language Detector using NLP</h1>
+<p>This tool can detect the following languages: English, Spanish, French, German, Italian, Portuguese, Dutch, Russian, Chinese, Japanese, Arabic.</p>    <textarea id="textInput" placeholder="Enter text..."></textarea>
+    <button onclick="detectLanguage()">Detect Language</button>
+    <div class="pl hidden" id="loader">
+        <div class="pl__dot"></div>
+        <div class="pl__text">🔄 Detecting…</div>
+    </div>
+    <div id="output"></div>
+
+    <script>
+       async function detectLanguage() {
+            const text = document.getElementById('textInput').value;
+            const loader = document.getElementById('loader');
+            const output = document.getElementById('output');
+
+            loader.classList.remove('hidden');
+            output.innerText = "";
+
+            try {
+                console.log("Sending request to server with text:", text);
+
+                const response = await fetch("http://localhost:5000/detect", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: text }) 
+                });
+
+                console.log("Response received:", response);
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Parsed response:", data);
+
+                loader.classList.add('hidden');
+                output.innerText = `📝 Detected Language: ${data.language}`;
+            } catch (error) {
+                console.error("Error in fetch request:", error);
+                loader.classList.add('hidden');
+                output.innerText = "❌ Error detecting language.";
+            }
+        }
+    </script>
+</body>
+</html>
