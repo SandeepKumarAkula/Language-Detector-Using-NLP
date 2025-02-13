@@ -81,7 +81,7 @@
             try {
                 console.log("Sending request to server with text:", text);
 
-                const response = await fetch("https://language-detector-using-nlp-2.onrender.com/detect", {
+                const response = await fetch("http://localhost:5000/detect", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ text: text }) 
